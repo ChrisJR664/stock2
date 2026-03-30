@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>台股即時看盤</title>
+  <style>
+    body { font-family: Arial; }
+    .up { color: red; }
+    .down { color: green; }
+  </style>
+</head>
+<body>
+  <h1>📈 台股即時</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th>價格</th>
+        <th>買</th>
+        <th>賣</th>
+        <th>量</th>
+      </tr>
+    </thead>
+    <tbody id="table"></tbody>
+  </table>
+
+<script>
+async function load() {
+  const res = await fetch("/api/stock");
+  const data = await res.json();
+
+  const table = document.getElementById("table");
+  table.innerHTML = "";
+
+  for (let id in data) {
+    const s = data[id];
+
+    let row = `<tr>
+      <td>${id}</td>
+      <td>${s.price || "-"}</td>
+      <td>${s.bid || "-"}</td>
+      <td>${s.ask || "-"}</td>
+      <td>${s.volume || "-"}</td>
+    </tr>`;
+
+    table.innerHTML += row;
+  }
+}
+
+// 🔥 2秒刷新（接近即時）
+setInterval(load, 2000);
+load();
+</script>
+
+</body>
+</html>
